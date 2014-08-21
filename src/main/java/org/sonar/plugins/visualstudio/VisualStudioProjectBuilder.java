@@ -97,8 +97,12 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
         if (!projectFile.isFile()) {
           LOG.warn("Unable to find the Visual Studio project file " + projectFile.getAbsolutePath());
         } else {
-          hasModules = true;
-          buildModule(solutionProject, project.name(), projectFile, projectParser.parse(projectFile), assemblyLocator, solutionFile);
+          VisualStudioProject vsProject = projectParser.parse(projectFile);
+		      File assembly = assemblyLocator.locateAssembly(project.name(), projectFile, vsProject);
+		      if (assembly != null) {
+		        hasModules = true;
+		        buildModule(solutionProject, project.name(), projectFile, vsProject, assemblyLocator, solutionFile);
+		      }
         }
       }
     }
